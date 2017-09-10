@@ -1,6 +1,6 @@
-package com.example.thinjar.maven;
+package org.develrulez.thinjar.maven;
 
-import com.example.thinjar.Helper;
+import org.develrulez.thinjar.Helper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,7 +63,7 @@ public class DependencyRepository {
                 throw new IllegalStateException("Unable to execute Maven to download dependencies.", e);
             }
 
-            int exitValue = 0;
+            int exitValue;
             try {
                 exitValue = process.waitFor();
             } catch (InterruptedException e) {

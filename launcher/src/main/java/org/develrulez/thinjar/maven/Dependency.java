@@ -1,4 +1,4 @@
-package com.example.thinjar.maven;
+package org.develrulez.thinjar.maven;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -86,7 +86,6 @@ public class Dependency {
         );
     }
 
-    @SuppressWarnings("unchecked")
     private static Map<String, Integer> getNamedGroups(Pattern regex) {
 
         Method namedGroupsMethod = null;

@@ -1,4 +1,4 @@
-package com.example.thinjar.cli;
+package org.develrulez.thinjar.cli;
 
 import java.util.*;
 

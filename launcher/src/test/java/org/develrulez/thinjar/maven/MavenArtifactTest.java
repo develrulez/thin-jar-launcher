@@ -1,4 +1,4 @@
-package com.example.thinjar.maven;
+package org.develrulez.thinjar.maven;
 
 import org.junit.Test;
 

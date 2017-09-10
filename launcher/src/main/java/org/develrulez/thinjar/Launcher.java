@@ -1,12 +1,13 @@
-package com.example.thinjar;
+package org.develrulez.thinjar;
 
-import com.example.thinjar.maven.DependencyRepository;
+import org.develrulez.thinjar.maven.DependencyRepository;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
@@ -32,17 +33,11 @@ public class Launcher {
     }
 
     private static void loadDependencies(DependencyRepository repository){
-        String classPath = Helper.getManifest().getMainAttributes().getValue("Class-Path");
-        if(classPath == null || classPath.isEmpty()){
-            throw new IllegalStateException("Manifests Class-Path attribute must not be null or empty.");
-        }
-
-        for(String dependency : classPath.split("\\s")){
-            if(dependency.isEmpty()){
-                continue;
-            }
+        for(String dependency : Helper.getClassPath()){
             Path dependencyPath = repository.getRepositoryHomePath().resolve(dependency);
-            System.out.println(dependencyPath.toString());
+            if(Files.notExists(dependencyPath)){
+                throw new IllegalStateException("Depedency not found with path " + dependencyPath.toString());
+            }
             loadDependency(dependencyPath);
         }
     }

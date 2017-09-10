@@ -1,4 +1,7 @@
 #!/bin/sh
+
+# Source copied from https://coderwall.com/p/ssuaxa/how-to-make-a-jar-file-linux-executable
+
 MYSELF=`which "$0" 2>/dev/null`
 [ $? -gt 0 -a -f "$0" ] && MYSELF="./$0"
 java=java

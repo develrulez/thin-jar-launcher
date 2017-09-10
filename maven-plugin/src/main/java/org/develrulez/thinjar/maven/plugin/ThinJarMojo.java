@@ -1,6 +1,6 @@
-package com.example.maven.plugin;
+package org.develrulez.thinjar.maven.plugin;
 
-import com.example.thinjar.Launcher;
+import org.develrulez.thinjar.Launcher;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;

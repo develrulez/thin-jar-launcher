@@ -12,7 +12,6 @@
             <unpack>true</unpack>
             <includes>
                 <include>${artifact}</include>
-                <include>com.example.maven.plugins:thin-jar-launcher</include>
             </includes>
         </dependencySet>
     </dependencySets>
@@ -20,7 +19,7 @@
         <fileSet>
             <directory>${project.build.directory}/thin-jar-launcher-extracted</directory>
             <includes>
-                <include>**/*</include>
+                <include>**/*.class</include>
             </includes>
             <outputDirectory>/</outputDirectory>
         </fileSet>

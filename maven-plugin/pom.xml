@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.example.maven.plugins</groupId>
-    <artifactId>thin-jar</artifactId>
+    <groupId>org.develrulez.thinjar</groupId>
+    <artifactId>thin-jar-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
@@ -14,11 +14,11 @@
   <dependencies>
 
     <dependency>
-      <groupId>com.example.maven.plugins</groupId>
+      <groupId>org.develrulez.thinjar</groupId>
       <artifactId>thin-jar-launcher</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.example.maven.plugins</groupId>
+      <groupId>org.develrulez.thinjar</groupId>
       <artifactId>thin-jar-maven-assembly-descriptors</artifactId>
     </dependency>
 
@@ -89,7 +89,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.2</version>
+        <version>3.4</version>
         <configuration>
           <goalPrefix>thin-jar-maven-plugin</goalPrefix>
           <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
