@@ -2,7 +2,9 @@
 
 This Maven plugin aims to provide a lightweight solution, to build thin jars, which get its dependencies at launch time via a [proper locally installed Maven](https://maven.apache.org/install.html) distribution.
 
-Simply add the following plugin to your distributable jar artifact...
+**[The Central Repository](http://central.sonatype.org/) integration is in process.**
+
+When this is done, you can simply add the following plugin to your distributable jar artifact...
 
 ```xml
 <plugin>
