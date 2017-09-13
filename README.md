@@ -1,5 +1,7 @@
 # Thin Jar Launcher
 
+[![Build Status](https://api.travis-ci.org/develrulez/thin-jar-launcher.svg)](https://travis-ci.org/develrulez/thin-jar-launcher)
+
 This Maven plugin aims to provide a lightweight solution, to build thin jars, which get its dependencies at launch time via a [proper locally installed Maven](https://maven.apache.org/install.html) distribution.
 
 **[The Central Repository](http://central.sonatype.org/) integration is in process.**
