@@ -26,7 +26,15 @@ When this is done, you can simply add the following plugin to your distributable
 </plugin>
 ```
 
-... and you'll get an additional artifact with the prefix **-thin.jar**.
+... and you'll get an additional artifact with the suffix **-thin.jar**.
+
+This thin jar artifact can basically be executed the traditional way:
+
+```bash
+java -jar *-thin.jar
+```
+
+Before the actual main class is executed, the launcher sets up a **lib** directory in the jars base directory, where the required application runtime dependencies are getting stored.
 
 To be continued...
 
