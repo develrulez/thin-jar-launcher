@@ -3,7 +3,12 @@ language: java
 jdk:
   - oraclejdk7
 
-script: mvn --settings .travis/settings.xml clean verify -P run-its
+cache:
+  directories:
+    - '$HOME/.m2'
+
+install: true
+script: ./mvnw --settings .travis/settings.xml clean verify -P run-its
 
 notifications:
   email:
