@@ -67,10 +67,12 @@ public class DependencyRepository {
             try {
                 exitValue = process.waitFor();
             } catch (InterruptedException e) {
-                throw new IllegalStateException("Unable to wait for process termination.", e);
+                throw new IllegalStateException("Unable to wait for Maven process termination.", e);
             }
             if (exitValue > 0) {
-                throw new IllegalStateException("Exit value " + exitValue);
+                throw new IllegalStateException("An error occured while invoking Maven (exit value " +
+                        exitValue +
+                        "). Check previous console output.");
             }
 
             return new DependencyRepository(this);
