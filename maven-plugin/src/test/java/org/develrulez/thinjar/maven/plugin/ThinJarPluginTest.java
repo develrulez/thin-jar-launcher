@@ -1,4 +1,4 @@
-package com.example.app.maven.plugin;
+package org.develrulez.thinjar.maven.plugin;
 
 import org.apache.maven.it.Verifier;
 import org.apache.maven.it.util.ResourceExtractor;

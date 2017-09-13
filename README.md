@@ -13,12 +13,11 @@ When this is done, you can simply add the following plugin to your distributable
   <version>0.0.1-SNAPSHOT</version>
   <executions>
     <execution>
-      <id>thin-jar</id>
       <goals>
         <goal>thin-jar</goal>
       </goals>
       <configuration>
-        <mainClass>org.example.ExampleApplication</mainClass>
+        <mainClass>${add_your_main_class_here}</mainClass>
       </configuration>
     </execution>
   </executions>
@@ -31,5 +30,4 @@ To be continued...
 
 ## License
 
-This project is Open Source software released under 
-[the MIT license](https://opensource.org/licenses/MIT).
+This project is Open Source software released under [the MIT license](https://opensource.org/licenses/MIT).

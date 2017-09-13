@@ -1,7 +1,7 @@
 package com.example.app;
 
-import com.example.service.ExampleService;
 import com.example.dataaccess.ExampleDataAccess;
+import com.example.service.ExampleService;
 
 public class ExampleApplication {
 

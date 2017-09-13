@@ -17,11 +17,29 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Devel Rulez</name>
+            <email>develrulez@gmail.com</email>
+        </developer>
+    </developers>
+
     <scm>
         <connection>scm:git:git://github.com:develrulez/thin-jar-launcher.git</connection>
         <developerConnection>scm:git:git@github.com:develrulez/thin-jar-launcher.git</developerConnection>
         <url>https://github.com/develrulez/thin-jar-launcher</url>
     </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <modules>
         <module>launcher</module>
@@ -36,10 +54,33 @@
         <maven.compiler.testTarget>${java.version}</maven.compiler.testTarget>
         <maven.compiler.testSource>${java.version}</maven.compiler.testSource>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <maven.version>3.1.0</maven.version>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+                <configuration>
+                    <deployAtEnd>true</deployAtEnd>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven</artifactId>
+                <version>${maven.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
             <dependency>
                 <groupId>org.develrulez.thinjar</groupId>
                 <artifactId>thin-jar-launcher</artifactId>
@@ -66,7 +107,7 @@
                             <execution>
                                 <id>attach-sources</id>
                                 <goals>
-                                    <goal>jar</goal>
+                                    <goal>jar-no-fork</goal>
                                 </goals>
                             </execution>
                         </executions>

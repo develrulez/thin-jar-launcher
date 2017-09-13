@@ -1,6 +1,5 @@
 package org.develrulez.thinjar.maven.plugin;
 
-import org.develrulez.thinjar.Launcher;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
@@ -9,6 +8,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
+import org.develrulez.thinjar.Launcher;
 
 import java.io.File;
 import java.util.Arrays;
@@ -42,7 +42,10 @@ public class ThinJarMojo extends AbstractMojo {
         ExecutionEnvironment executionEnvironment = executionEnvironment(mavenProject, mavenSession, pluginManager);
 
         executeMojo(
-                plugin(artifactId("org.apache.maven.plugins"), groupId("maven-dependency-plugin"), version("3.0.1")),
+                plugin(
+                        artifactId("org.apache.maven.plugins"),
+                        groupId("maven-dependency-plugin"),
+                        version("3.0.1")),
                 goal("unpack"),
                 configuration(
                         element("artifactItems",
@@ -58,10 +61,6 @@ public class ThinJarMojo extends AbstractMojo {
                 ),
                 executionEnvironment);
 
-        packageThinJar(executionEnvironment);
-    }
-
-    private void packageThinJar(ExecutionEnvironment executionEnvironment) throws MojoExecutionException {
         executeMojo(
                 plugin(
                         artifactId("org.apache.maven.plugins"),

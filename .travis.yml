@@ -1,0 +1,10 @@
+language: java
+
+jdk:
+  - oraclejdk7
+
+script: mvn --settings .travis/settings.xml clean verify -P run-its
+
+notifications:
+  email:
+    - develrulez@gmail.com
