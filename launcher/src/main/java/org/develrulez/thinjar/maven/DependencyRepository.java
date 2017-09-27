@@ -1,9 +1,8 @@
 package org.develrulez.thinjar.maven;
 
-import org.develrulez.thinjar.Helper;
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -26,9 +25,15 @@ public class DependencyRepository {
     public static class Builder {
 
         private Path repositoryHomePath;
+        private URL mavenPomUrl;
 
         public Builder home(Path repositoryHomePath) {
             this.repositoryHomePath = repositoryHomePath;
+            return this;
+        }
+
+        public Builder mavenPom(URL url) {
+            this.mavenPomUrl = url;
             return this;
         }
 
@@ -42,7 +47,7 @@ public class DependencyRepository {
             }
             Path pomPath = tempDir.resolve("pom.xml");
 
-            try(InputStream inputStream = Helper.getMavenPomUrl().openStream()){
+            try (InputStream inputStream = mavenPomUrl.openStream()) {
                 Files.copy(inputStream, pomPath);
             }catch (IOException e) {
                 throw new IllegalStateException("Unable to copy pom.xml.", e);

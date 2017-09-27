@@ -1,6 +1,7 @@
 package org.develrulez.thinjar;
 
 import org.develrulez.thinjar.maven.DependencyRepository;
+import org.develrulez.thinjar.util.JarHelper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,14 +14,23 @@ import java.util.Arrays;
 
 public class Launcher {
 
-    public static void main(String[] args) {
-        String startClassName = Helper.getManifest().getMainAttributes().getValue("Start-Class");
-        DependencyRepository repository = DependencyRepository.builder().home(Helper.getJarHome().resolve("lib")).build();
-        loadDependencies(repository);
-        executeStartClass(startClassName, args);
+    private final JarHelper jarHelper;
+
+    private Launcher(JarHelper jarHelper) {
+        this.jarHelper = jarHelper;
     }
 
-    private static void executeStartClass(String startClassName, String[] args) {
+    public static void main(String[] args) {
+        Launcher.withJarHelper(JarHelper.forClass(Launcher.class)).launch(args);
+    }
+
+    public static Launcher withJarHelper(JarHelper jarHelper) {
+        return new Launcher(jarHelper);
+    }
+
+    private void launch(String[] args) {
+        loadDependencies(DependencyRepository.builder().home(jarHelper.getJarHome().resolve("lib")).mavenPom(jarHelper.getMavenPomUrl()).build());
+        String startClassName = jarHelper.getManifest().getMainAttributes().getValue("Start-Class");
         try {
             Class<?> startClass = Class.forName(startClassName);
             Method mainMethod = startClass.getMethod("main", String[].class);
@@ -32,8 +42,8 @@ public class Launcher {
         }
     }
 
-    private static void loadDependencies(DependencyRepository repository){
-        for(String dependency : Helper.getClassPath()){
+    private void loadDependencies(DependencyRepository repository) {
+        for (String dependency : jarHelper.getClassPath()) {
             Path dependencyPath = repository.getRepositoryHomePath().resolve(dependency);
             if(Files.notExists(dependencyPath)){
                 throw new IllegalStateException("Depedency not found with path " + dependencyPath.toString());
@@ -42,7 +52,7 @@ public class Launcher {
         }
     }
 
-    private static synchronized void loadDependency(Path jarPath) {
+    private synchronized void loadDependency(Path jarPath) {
         try {
             URLClassLoader loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
             URL url = jarPath.toUri().toURL();

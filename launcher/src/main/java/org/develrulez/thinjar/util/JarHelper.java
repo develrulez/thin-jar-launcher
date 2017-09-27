@@ -1,4 +1,4 @@
-package org.develrulez.thinjar;
+package org.develrulez.thinjar.util;
 
 import org.develrulez.thinjar.maven.Dependency;
 
@@ -14,10 +14,40 @@ import java.util.List;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-public class Helper {
+public class JarHelper {
 
-    public static List<String> getClassPath(){
-        String classPathValue = Helper.getManifest().getMainAttributes().getValue("Class-Path");
+    private final Class<?> targetClass;
+
+    private final LazyInitializer<Manifest> manifest = new LazyInitializer<Manifest>() {
+        @Override
+        protected Manifest initialize() {
+            String jarName = getJarName();
+            if (jarName.equals("classes")) {
+                throw new IllegalStateException("Launcher cannot be executed from within an IDE.");
+            }
+            URL manifestUrl = getClassPathResourceUrl(JarFile.MANIFEST_NAME);
+            try (InputStream is = manifestUrl.openStream()) {
+                return new Manifest(is);
+            } catch (IOException e) {
+                throw new IllegalStateException("Unable to open " +
+                        JarFile.MANIFEST_NAME +
+                        " from " +
+                        manifestUrl.toString() +
+                        "", e);
+            }
+        }
+    };
+
+    private JarHelper(Class<?> targetClass) {
+        this.targetClass = targetClass;
+    }
+
+    public static JarHelper forClass(Class<?> targetClass) {
+        return new JarHelper(targetClass);
+    }
+
+    public List<String> getClassPath() {
+        String classPathValue = manifest.get().getMainAttributes().getValue("Class-Path");
         if(classPathValue == null || classPathValue.isEmpty()){
             throw new IllegalStateException("Manifests Class-Path attribute must not be null or empty.");
         }
@@ -32,20 +62,20 @@ public class Helper {
         return Collections.unmodifiableList(classPath);
     }
 
-    public static Path getJarHome(){
+    public Path getJarHome() {
         return getJarPath().getParent();
     }
 
-    public static Path getJarPath(){
-        return Paths.get(Helper.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+    public Path getJarPath() {
+        return Paths.get(targetClass.getProtectionDomain().getCodeSource().getLocation().getPath());
     }
 
-    public static String getJarName() {
+    public String getJarName() {
         return getJarPath().getFileName().toString();
     }
 
-    public static URL getMavenPomUrl(){
-        String mavenArtifactString = getManifest().getMainAttributes().getValue("Maven-Artifact");
+    public URL getMavenPomUrl() {
+        String mavenArtifactString = manifest.get().getMainAttributes().getValue("Maven-Artifact");
         if(mavenArtifactString == null || mavenArtifactString.isEmpty()){
             throw new IllegalStateException("Maven artifact value must not be null or empty");
         }
@@ -53,24 +83,11 @@ public class Helper {
         return getClassPathResourceUrl(String.format("META-INF/maven/%s/%s/pom.xml", mavenArtifact.getGroupId(), mavenArtifact.getArtifactId()));
     }
 
-    public static Manifest getManifest(){
-        String jarName = getJarName();
-        if(jarName.equals("classes")){
-            throw new IllegalStateException("Launcher cannot be executed from within an IDE.");
-        }
-        URL manifestUrl = getClassPathResourceUrl(JarFile.MANIFEST_NAME);
-        try(InputStream is = manifestUrl.openStream()){
-            return new Manifest(is);
-        }catch(IOException e){
-            throw new IllegalStateException("Unable to open " +
-                    JarFile.MANIFEST_NAME +
-                    " from " +
-                    manifestUrl.toString() +
-                    "", e);
-        }
+    public Manifest getManifest() {
+        return manifest.get();
     }
 
-    public static URL getClassPathResourceUrl(String name){
+    private URL getClassPathResourceUrl(String name) {
         String jarName = getJarName();
         Enumeration resEnum;
         try {

@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MavenArtifactTest {
+public class DependencyTest {
 
     @Test
     public void testArtifactString(){
