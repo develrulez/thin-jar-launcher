@@ -34,6 +34,7 @@
             </goals>
             <configuration>
               <mainClass>com.example.ExampleApplication</mainClass>
+              <generateExecutables>true</generateExecutables>
             </configuration>
           </execution>
         </executions>

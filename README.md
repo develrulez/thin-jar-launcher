@@ -11,7 +11,7 @@ When this is done, you can simply add the following plugin to your distributable
 
 ```xml
 <plugin>
-  <groupId>org.devrulez.thinjar</groupId>
+  <groupId>org.develrulez.thinjar</groupId>
   <artifactId>thin-jar-maven-plugin</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <executions>

@@ -1,5 +1,7 @@
 package org.develrulez.thinjar.maven;
 
+import org.develrulez.thinjar.util.OperatingSystem;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -58,12 +60,23 @@ public class DependencyRepository {
             cmd.append(" -DoutputDirectory=").append(repositoryHomePath.toString());
             cmd.append(" -DoverWriteReleases=false -DoverWriteSnapshots=false -DoverWriteIfNewer=true -DincludeScope=runtime -Dmdep.useRepositoryLayout=true");
 
-            Process process = null;
+            ProcessBuilder processBuilder;
+            OperatingSystem operatingSystem = OperatingSystem.get();
+            if(operatingSystem.isUnix() || operatingSystem.isMac()){
+                processBuilder = new ProcessBuilder("/bin/bash", "-l", "-c", cmd.toString());
+
+            }else if(operatingSystem.isWindows()){
+                processBuilder = new ProcessBuilder("cmd", "/c", cmd.toString());
+
+            }else{
+                throw new IllegalStateException("Unsupported operating system type '" +
+                        operatingSystem.getType().name() +
+                        "'");
+            }
+
+            Process process;
             try {
-                process = new ProcessBuilder("/bin/bash", "-l", "-c", cmd.toString())
-                        .inheritIO()
-                        .directory(tempDir.toFile())
-                        .start();
+                process = processBuilder.inheritIO().directory(tempDir.toFile()).start();
             } catch (IOException e) {
                 throw new IllegalStateException("Unable to execute Maven to download dependencies.", e);
             }

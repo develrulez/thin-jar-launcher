@@ -67,7 +67,12 @@ public class JarHelper {
     }
 
     public Path getJarPath() {
-        return Paths.get(targetClass.getProtectionDomain().getCodeSource().getLocation().getPath());
+        String path = targetClass.getProtectionDomain().getCodeSource().getLocation().getPath();
+
+        // If running on windows, the path contains an illegal leading slash (e.g. '/C:/xzy/abc.jar'), that will be removed.
+        path = path.replaceFirst("^/(.:/)", "$1");
+
+        return Paths.get(path);
     }
 
     public String getJarName() {

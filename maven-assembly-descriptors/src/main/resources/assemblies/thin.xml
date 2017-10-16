@@ -15,13 +15,13 @@
             </includes>
         </dependencySet>
     </dependencySets>
-   <fileSets>
+    <fileSets>
         <fileSet>
+            <outputDirectory>/</outputDirectory>
             <directory>${project.build.directory}/thin-jar-launcher-extracted</directory>
             <includes>
                 <include>**/*.class</include>
             </includes>
-            <outputDirectory>/</outputDirectory>
         </fileSet>
     </fileSets>
 </assembly>
