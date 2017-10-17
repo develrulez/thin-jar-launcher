@@ -22,8 +22,10 @@ public class JarHelper {
         @Override
         protected Manifest initialize() {
             String jarName = getJarName();
-            if (jarName.equals("classes")) {
-                throw new IllegalStateException("Launcher cannot be executed from within an IDE.");
+            if (jarName.equals("classes") || jarName.equals("test-classes")) {
+                throw new IllegalStateException("Manifest is not available for non-packaged class '" +
+                        targetClass.getName() +
+                        "'");
             }
             URL manifestUrl = getClassPathResourceUrl(JarFile.MANIFEST_NAME);
             try (InputStream is = manifestUrl.openStream()) {
@@ -49,7 +51,7 @@ public class JarHelper {
     public List<String> getClassPath() {
         String classPathValue = manifest.get().getMainAttributes().getValue("Class-Path");
         if(classPathValue == null || classPathValue.isEmpty()){
-            throw new IllegalStateException("Manifests Class-Path attribute must not be null or empty.");
+            throw new IllegalStateException("Manifests Class-Path attribute not set");
         }
 
         List<String> classPath = new ArrayList<>();
@@ -69,7 +71,7 @@ public class JarHelper {
     public Path getJarPath() {
         String path = targetClass.getProtectionDomain().getCodeSource().getLocation().getPath();
 
-        // If running on windows, the path contains an illegal leading slash (e.g. '/C:/xzy/abc.jar'), that will be removed.
+        // If running on windows, the path contains an 'illegal' leading slash (e.g. '/C:/xzy/abc.jar'), that will be removed.
         path = path.replaceFirst("^/(.:/)", "$1");
 
         return Paths.get(path);
