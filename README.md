@@ -1,7 +1,8 @@
 # Thin Jar Launcher
 
-[![Build Status](https://api.travis-ci.org/develrulez/thin-jar-launcher.svg)](https://travis-ci.org/develrulez/thin-jar-launcher)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.develrulez.thinjar/thin-jar-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.develrulez.thinjar/thin-jar-parent)
+[![travis-ci](https://api.travis-ci.org/develrulez/thin-jar-launcher.svg)](https://travis-ci.org/develrulez/thin-jar-launcher)
+[![codecov.io](https://codecov.io/gh/develrulez/thin-jar-launcher/branch/master/graph/badge.svg)](https://codecov.io/gh/develrulez/thin-jar-launcher)
+[![maven-central](https://maven-badges.herokuapp.com/maven-central/org.develrulez.thinjar/thin-jar-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.develrulez.thinjar/thin-jar-parent)
 
 This Maven plugin aims to provide a lightweight solution, to build thin jars, which get its dependencies at launch time via a [proper locally installed Maven](https://maven.apache.org/install.html) distribution.
 
