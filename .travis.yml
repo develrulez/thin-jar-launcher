@@ -8,7 +8,7 @@ cache:
     - '$HOME/.m2'
 
 install: true
-script: ./mvnw --settings .travis/settings.xml clean verify cobertura:cobertura -P run-its
+script: ./mvnw --settings .travis/settings.xml clean verify -P run-its
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
