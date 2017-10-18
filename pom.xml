@@ -69,11 +69,12 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.20.1</version>
                     <configuration>
+                        <argLine>${surefireArgLine}</argLine>
                         <includes>
                             <include>**/*Test.java</include>
                         </includes>
                         <excludes>
-                            <include>**/*IntegrationTest.java</include>
+                            <exclude>**/*IntegrationTest.java</exclude>
                         </excludes>
                         <systemPropertyVariables>
                             <buildDirectory>${project.build.directory}</buildDirectory>
@@ -84,22 +85,23 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>2.20.1</version>
-                    <configuration>
-                        <skipITs>${skipIntegrationTests}</skipITs>
-                        <includes>
-                            <include>**/*IT.java</include>
-                            <include>**/*IntegrationTest.java</include>
-                        </includes>
-                        <systemPropertyVariables>
-                            <buildDirectory>${project.build.directory}</buildDirectory>
-                        </systemPropertyVariables>
-                    </configuration>
                     <executions>
                         <execution>
                             <goals>
                                 <goal>integration-test</goal>
                                 <goal>verify</goal>
                             </goals>
+                            <configuration>
+                                <argLine>${failsafeArgLine}</argLine>
+                                <skipITs>${skipIntegrationTests}</skipITs>
+                                <includes>
+                                    <include>**/*IT.java</include>
+                                    <include>**/*IntegrationTest.java</include>
+                                </includes>
+                                <systemPropertyVariables>
+                                    <buildDirectory>${project.build.directory}</buildDirectory>
+                                </systemPropertyVariables>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
@@ -112,16 +114,47 @@
                 <version>0.7.9</version>
                 <executions>
                     <execution>
+                        <id>pre-unit-test</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+                            <propertyName>surefireArgLine</propertyName>
+                        </configuration>
                     </execution>
                     <execution>
-                        <id>report</id>
+                        <id>post-unit-test</id>
                         <phase>test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>pre-integration-test</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
+                            <propertyName>failsafeArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>post-integration-test</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
