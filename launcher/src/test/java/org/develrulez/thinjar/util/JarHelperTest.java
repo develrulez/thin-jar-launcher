@@ -45,13 +45,20 @@ public class JarHelperTest {
     @Test
     public void testGetMavenPomUrl(){
         String mavenPomUrl = sut.getMavenPomUrl().toString();
-        assertThat(mavenPomUrl).endsWith("launcher/src/test/resources/thin-jar-test-dummy-0.0.1-SNAPSHOT.jar!/META-INF/maven/org.develrulez.thinjar/thin-jar-test-dummy/pom.xml").isNotNull();
+        assertThat(mavenPomUrl).endsWith("launcher/target/test-classes/thin-jar-test-dummy-0.0.1-SNAPSHOT.jar!/META-INF/maven/org.develrulez.thinjar/thin-jar-test-dummy/pom.xml").isNotNull();
         assertThat(mavenPomUrl).startsWith("jar:file:");
     }
 
     @Test
     public void testGetJarHome(){
         String jarHome = sut.getJarHome().toString();
-        assertThat(jarHome).endsWith("launcher/src/test/resources");
+        assertThat(jarHome).endsWith("launcher/target/test-classes");
+    }
+
+    @Test
+    public void testGetNonExistentResourceUrl(){
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("No resource found with name 'log4j.properties'");
+        sut.getClassPathResourceUrl("log4j.properties");
     }
 }

@@ -94,7 +94,7 @@ public class JarHelper {
         return manifest.get();
     }
 
-    private URL getClassPathResourceUrl(String name) {
+    public URL getClassPathResourceUrl(String name) {
         String jarName = getJarName();
         Enumeration resEnum;
         try {

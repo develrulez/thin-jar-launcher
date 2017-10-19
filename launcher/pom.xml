@@ -19,7 +19,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <additionalClasspathElements>
-                        <additionalClasspathElement>${basedir}/src/test/resources/thin-jar-test-dummy-0.0.1-SNAPSHOT.jar</additionalClasspathElement>
+                        <additionalClasspathElement>${project.build.directory}/test-classes/thin-jar-test-dummy-0.0.1-SNAPSHOT.jar</additionalClasspathElement>
                     </additionalClasspathElements>
                 </configuration>
             </plugin>
@@ -37,6 +37,12 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <version>1.16.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

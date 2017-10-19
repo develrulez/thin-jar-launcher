@@ -110,12 +110,6 @@ public class Dependency {
         return Collections.unmodifiableMap(namedGroups);
     }
 
-    public String getRepositoryLayoutDir(){
-        return new StringBuilder(groupId.replace('.', File.separatorChar))
-                .append(File.separatorChar).append(artifactId)
-                .append(File.separatorChar).append(version).toString();
-    }
-
     public String getRepositoryLayoutPath(){
         StringBuilder sb = new StringBuilder(groupId.replace('.', File.separatorChar))
                 .append(File.separatorChar).append(artifactId)

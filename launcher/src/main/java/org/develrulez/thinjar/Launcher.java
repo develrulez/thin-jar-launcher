@@ -28,7 +28,7 @@ public class Launcher {
         return new Launcher(jarHelper);
     }
 
-    private void launch(String[] args) {
+    public void launch(String... args) {
         loadDependencies(DependencyRepository.builder().home(jarHelper.getJarHome().resolve("lib")).mavenPom(jarHelper.getMavenPomUrl()).build());
         String startClassName = jarHelper.getManifest().getMainAttributes().getValue("Start-Class");
         try {
