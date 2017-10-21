@@ -1,8 +1,7 @@
 package org.develrulez.thinjar.util;
 
-import junit.framework.TestCase;
 import static org.assertj.core.api.Assertions.*;
-import org.develrulez.thinjar.Launcher;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,10 +42,52 @@ public class JarHelperTest {
     }
 
     @Test
+    public void testGetResource(){
+        assertThat(sut.getResource(Pattern.compile(".*/pom.xml"))).isNotEmpty();
+    }
+
+    @Test
+    public void testGetResourceWithNoMatch(){
+        Pattern pattern = Pattern.compile(".*/asdasd.xml");
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("No resource found with pattern '" +
+                pattern.pattern() +
+                "'");
+        sut.getResource(pattern);
+    }
+
+
+    @Test
+    public void testGetResourceWithMultipleMatch(){
+        Pattern pattern = Pattern.compile("org/.*");
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("More than one resource found with pattern '" +
+                pattern.pattern() +
+                "'");
+        sut.getResource(pattern);
+    }
+
+    @Test
+    public void testGetResources(){
+        List<String> resources = sut.getResources(Pattern.compile(".*"));
+        assertThat(resources).hasSize(11);
+        resources = sut.getResources(Pattern.compile("META-INF/.*"));
+        assertThat(resources).hasSize(7);
+        resources = sut.getResources(Pattern.compile("abcxyz"));
+        assertThat(resources).hasSize(0);
+    }
+
+    @Test
     public void testGetMavenPomUrl(){
         String mavenPomUrl = sut.getMavenPomUrl().toString();
         assertThat(mavenPomUrl).endsWith("launcher/target/test-classes/thin-jar-test-dummy-0.0.1-SNAPSHOT.jar!/META-INF/maven/org.develrulez.thinjar/thin-jar-test-dummy/pom.xml").isNotNull();
         assertThat(mavenPomUrl).startsWith("jar:file:");
+    }
+
+    @Test
+    public void testGetJarPath(){
+        String jarPath = sut.getJarPath().toString();
+        assertThat(jarPath).endsWith("target/test-classes/thin-jar-test-dummy-0.0.1-SNAPSHOT.jar");
     }
 
     @Test
@@ -59,6 +100,6 @@ public class JarHelperTest {
     public void testGetNonExistentResourceUrl(){
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("No resource found with name 'log4j.properties'");
-        sut.getClassPathResourceUrl("log4j.properties");
+        sut.getResourceUrl("log4j.properties");
     }
 }

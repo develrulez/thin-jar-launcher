@@ -1,5 +1,6 @@
 package org.develrulez.thinjar;
 
+import org.develrulez.thinjar.maven.Dependency;
 import org.develrulez.thinjar.maven.DependencyRepository;
 import org.develrulez.thinjar.util.JarHelper;
 
@@ -29,6 +30,7 @@ public class Launcher {
     }
 
     public void launch(String... args) {
+        System.setProperty("thinjar.launcher.active", Boolean.TRUE.toString());
         loadDependencies(DependencyRepository.builder().home(jarHelper.getJarHome().resolve("lib")).mavenPom(jarHelper.getMavenPomUrl()).build());
         String startClassName = jarHelper.getManifest().getMainAttributes().getValue("Start-Class");
         try {
@@ -43,12 +45,12 @@ public class Launcher {
     }
 
     private void loadDependencies(DependencyRepository repository) {
-        for (String dependency : jarHelper.getClassPath()) {
-            Path dependencyPath = repository.getRepositoryHomePath().resolve(dependency);
-            if(Files.notExists(dependencyPath)){
-                throw new IllegalStateException("Depedency not found with path " + dependencyPath.toString());
+        for (String relativeDependencyPath : jarHelper.getClassPath()) {
+            Path absoluteDependencyPath = repository.getRepositoryHomePath().resolve(relativeDependencyPath);
+            if(Files.notExists(absoluteDependencyPath)){
+                throw new IllegalStateException("Depedency not found with path " + absoluteDependencyPath.toString());
             }
-            loadDependency(dependencyPath);
+            loadDependency(absoluteDependencyPath);
         }
     }
 

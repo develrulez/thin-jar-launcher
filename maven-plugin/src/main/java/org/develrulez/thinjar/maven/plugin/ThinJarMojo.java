@@ -68,7 +68,7 @@ public class ThinJarMojo extends AbstractMojo {
                 plugin(
                         artifactId("org.apache.maven.plugins"),
                         groupId("maven-dependency-plugin"),
-                        version("3.0.1")),
+                        version("3.0.2")),
                 goal("unpack"),
                 configuration(
                         element("artifactItems",
@@ -102,7 +102,6 @@ public class ThinJarMojo extends AbstractMojo {
                                         element("mainClass", Launcher.class.getName()),
                                         element("classpathLayoutType", "repository")),
                                 element("manifestEntries",
-                                        element("Maven-Artifact", "${project.groupId}:${project.artifactId}:${project.version}"),
                                         element("Start-Class", mainClass))
                         )
                 ),

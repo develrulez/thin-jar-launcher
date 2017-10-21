@@ -2,19 +2,20 @@ package org.develrulez.thinjar.util;
 
 import org.develrulez.thinjar.maven.Dependency;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class JarHelper {
+
+    private final Pattern POM_PATH_PATTERN = Pattern.compile("META-INF/maven/.*/pom.xml");
 
     private final Class<?> targetClass;
 
@@ -27,7 +28,7 @@ public class JarHelper {
                         targetClass.getName() +
                         "'");
             }
-            URL manifestUrl = getClassPathResourceUrl(JarFile.MANIFEST_NAME);
+            URL manifestUrl = getResourceUrl(JarFile.MANIFEST_NAME);
             try (InputStream is = manifestUrl.openStream()) {
                 return new Manifest(is);
             } catch (IOException e) {
@@ -53,13 +54,11 @@ public class JarHelper {
         if(classPathValue == null || classPathValue.isEmpty()){
             throw new IllegalStateException("Manifests Class-Path attribute not set");
         }
-
         List<String> classPath = new ArrayList<>();
         for(String dependency : classPathValue.split("\\s")){
-            if(dependency.isEmpty()){
-                continue;
+            if(!dependency.isEmpty()){
+                classPath.add(dependency);
             }
-            classPath.add(dependency);
         }
         return Collections.unmodifiableList(classPath);
     }
@@ -82,19 +81,14 @@ public class JarHelper {
     }
 
     public URL getMavenPomUrl() {
-        String mavenArtifactString = manifest.get().getMainAttributes().getValue("Maven-Artifact");
-        if(mavenArtifactString == null || mavenArtifactString.isEmpty()){
-            throw new IllegalStateException("Maven artifact value must not be null or empty");
-        }
-        Dependency mavenArtifact = Dependency.from(mavenArtifactString);
-        return getClassPathResourceUrl(String.format("META-INF/maven/%s/%s/pom.xml", mavenArtifact.getGroupId(), mavenArtifact.getArtifactId()));
+        return getResourceUrl(getResource(POM_PATH_PATTERN));
     }
 
     public Manifest getManifest() {
         return manifest.get();
     }
 
-    public URL getClassPathResourceUrl(String name) {
+    public URL getResourceUrl(String name) {
         String jarName = getJarName();
         Enumeration resEnum;
         try {
@@ -113,5 +107,37 @@ public class JarHelper {
         throw new IllegalStateException("No resource found with name '" +
                 name +
                 "'.");
+    }
+
+    public String getResource(Pattern pattern){
+        List<String> resources = getResources(pattern);
+        if(resources.size() == 0){
+            throw new IllegalStateException("No resource found with pattern '" +
+                    pattern.pattern() +
+                    "'");
+        }
+        if(resources.size() > 1){
+            throw new IllegalStateException("More than one resource found with pattern '" +
+                    pattern.pattern() +
+                    "'");
+        }
+        return resources.get(0);
+    }
+
+    public List<String> getResources(Pattern pattern){
+        List<String> retval = new ArrayList<>();
+        try(ZipFile zf = new ZipFile(getJarPath().toFile())){
+            Enumeration e = zf.entries();
+            while(e.hasMoreElements()){
+                ZipEntry ze = (ZipEntry) e.nextElement();
+                String fileName = ze.getName();
+                if(pattern.matcher(fileName).matches()){
+                    retval.add(fileName);
+                }
+            }
+        } catch(IOException e){
+            throw new IllegalStateException(e);
+        }
+        return retval;
     }
 }

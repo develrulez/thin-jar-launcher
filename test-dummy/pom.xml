@@ -25,7 +25,6 @@
                             <classpathLayoutType>repository</classpathLayoutType>
                         </manifest>
                         <manifestEntries>
-                            <Maven-Artifact>${project.groupId}:${project.artifactId}:${project.version}</Maven-Artifact>
                             <Start-Class>org.develrulez.thinjar.TestDummy</Start-Class>
                         </manifestEntries>
                     </archive>

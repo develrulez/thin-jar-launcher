@@ -55,10 +55,14 @@ public class DependencyRepository {
                 throw new IllegalStateException("Unable to copy pom.xml.", e);
             }
 
-            StringBuilder cmd = new StringBuilder("mvn");
-            cmd.append(" org.apache.maven.plugins:maven-dependency-plugin:3.0.1:copy-dependencies ");
-            cmd.append(" -DoutputDirectory=").append(repositoryHomePath.toString());
-            cmd.append(" -DoverWriteReleases=false -DoverWriteSnapshots=false -DoverWriteIfNewer=true -DincludeScope=runtime -Dmdep.useRepositoryLayout=true");
+            StringBuilder cmd = new StringBuilder("mvn")
+                    .append(" org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy-dependencies ")
+                    .append(" -DoutputDirectory=").append(repositoryHomePath.toString())
+                    .append(" -DoverWriteReleases=false")
+                    .append(" -DoverWriteSnapshots=false")
+                    .append(" -DoverWriteIfNewer=true")
+                    .append(" -DincludeScope=runtime")
+                    .append(" -Dmdep.useRepositoryLayout=true");
 
             ProcessBuilder processBuilder;
             OperatingSystem operatingSystem = OperatingSystem.get();

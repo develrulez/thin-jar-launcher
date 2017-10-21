@@ -3,6 +3,7 @@
 [![travis-ci](https://api.travis-ci.org/develrulez/thin-jar-launcher.svg)](https://travis-ci.org/develrulez/thin-jar-launcher)
 [![codecov.io](https://codecov.io/gh/develrulez/thin-jar-launcher/branch/master/graph/badge.svg)](https://codecov.io/gh/develrulez/thin-jar-launcher)
 [![maven-central](https://maven-badges.herokuapp.com/maven-central/org.develrulez.thinjar/thin-jar-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.develrulez.thinjar/thin-jar-parent)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Maven Plugin
 
@@ -30,7 +31,7 @@ When this is done, you can simply add the following plugin to your distributable
 </plugin>
 ```
 
-... and you'll get an additional artifact with the suffix **-thin.jar**.
+... and you'll get an additional artifact to you default jar with the suffix **-thin.jar**.
 
 This thin jar artifact can basically be executed the traditional way:
 
@@ -42,6 +43,62 @@ Before the actual main class is executed, the launcher sets up a **lib** directo
 
 To be continued...
 
-## License
+## Known 'inconsistencies'
 
-This project is Open Source software released under [the MIT license](https://opensource.org/licenses/MIT).
+### Spring Boot Developer Tools
+
+When the artifact [spring-boot-devtools](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html) is a part of your project dependencies, without any further configuration, following error may occur after launching the thin jar:
+
+```text
+2017-10-20 18:35:09.438  INFO 4088 --- [  restartedMain] com.example.ExampleApplication           : Started ExampleApplication in 1.931 seconds (JVM running for 8.351)
+Exception in thread "main" java.lang.IllegalStateException: Unable to execute starter class 'com.example.ExampleApplication'.
+        at org.develrulez.thinjar.Launcher.launch(Launcher.java:41)
+        at org.develrulez.thinjar.Launcher.main(Launcher.java:25)
+Caused by: java.lang.reflect.InvocationTargetException
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:498)
+        at org.develrulez.thinjar.Launcher.launch(Launcher.java:39)
+        ... 1 more
+Caused by: org.springframework.boot.devtools.restart.SilentExitExceptionHandler$SilentExitException
+        at org.springframework.boot.devtools.restart.SilentExitExceptionHandler.exitCurrentThread(SilentExitExceptionHandler.java:90)
+        at org.springframework.boot.devtools.restart.Restarter.immediateRestart(Restarter.java:184)
+        at org.springframework.boot.devtools.restart.Restarter.initialize(Restarter.java:163)
+        at org.springframework.boot.devtools.restart.Restarter.initialize(Restarter.java:552)
+        at org.springframework.boot.devtools.restart.RestartApplicationListener.onApplicationStartingEvent(RestartApplicationListener.java:67)
+        at org.springframework.boot.devtools.restart.RestartApplicationListener.onApplicationEvent(RestartApplicationListener.java:45)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:167)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:139)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:122)
+        at org.springframework.boot.context.event.EventPublishingRunListener.starting(EventPublishingRunListener.java:69)
+        at org.springframework.boot.SpringApplicationRunListeners.starting(SpringApplicationRunListeners.java:48)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:292)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+        at com.example.ExampleApplication.main(ExampleApplication.java:10)
+        ... 6 more
+```
+
+In this case you can [disable the restart feature of Spring Boot's developer tools](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html#using-boot-devtools-restart-disable) by combining it with a specialized property check:
+
+```java
+package com.example;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ExampleApplication {
+
+    public static void main(String[] args) {
+        if(Boolean.TRUE.toString().equals(System.getProperty("thinjar.launcher.active"))){
+            System.setProperty("spring.devtools.restart.enabled", "false");
+        }
+        SpringApplication.run(ExampleApplication.class, args);
+    }
+}
+
+```
+
+... or you have to look out for another solution. Suggestions will be accepted with a special thanks :wink:.

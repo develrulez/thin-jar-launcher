@@ -7,6 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ExampleApplication {
 
     public static void main(String[] args) {
+        if(Boolean.TRUE.toString().equals(System.getProperty("thinjar.launcher.active"))){
+            System.setProperty("spring.devtools.restart.enabled", "false");
+        }
         SpringApplication.run(ExampleApplication.class, args);
     }
 }
