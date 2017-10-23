@@ -50,14 +50,14 @@
         <dependency>
             <groupId>io.takari.maven.plugins</groupId>
             <artifactId>takari-plugin-testing</artifactId>
-            <version>2.9.2</version>
+            <version>${takari.plugin.testing.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>io.takari.maven.plugins</groupId>
             <artifactId>takari-plugin-integration-testing</artifactId>
-            <version>2.9.2</version>
+            <version>${takari.plugin.testing.version}</version>
             <type>pom</type>
             <scope>test</scope>
         </dependency>
