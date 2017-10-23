@@ -13,8 +13,6 @@ public abstract class LazyInitializer<T> {
      * is created. After that it is cached and can be accessed pretty fast.
      *
      * @return the object initialized by this {@code LazyInitializer}
-     * @throws ConcurrentException if an error occurred during initialization of
-     *                             the object
      */
     public T get() {
         // use a temporary variable to reduce the number of reads of the
@@ -41,7 +39,6 @@ public abstract class LazyInitializer<T> {
      * handled by {@code get()}.
      *
      * @return the managed data object
-     * @throws ConcurrentException if an error occurs during object creation
      */
     protected abstract T initialize();
 }

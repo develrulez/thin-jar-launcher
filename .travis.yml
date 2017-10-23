@@ -15,7 +15,7 @@ install:
   - ./mvnw --settings .travis/settings.xml install -B -V
 
 script:
-  - ./mvnw --settings .travis/settings.xml clean deploy -B -V -X -Prun-its,code-coverage,sonatype-oss-release,ossrh
+  - ./mvnw --settings .travis/settings.xml clean deploy -B -V -X -Prun-its,code-coverage,sonatype-oss-release
 
 before_deploy:
    - ./mvnw help:evaluate -N -Dexpression=project.version | grep -v '\['
