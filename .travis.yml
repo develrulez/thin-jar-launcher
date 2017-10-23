@@ -15,24 +15,7 @@ install:
   - ./mvnw --settings .travis/settings.xml install -B -V
 
 script:
-  - ./mvnw --settings .travis/settings.xml clean deploy -B -V -X -Prun-its,code-coverage,sonatype-oss-release
-
-before_deploy:
-   - ./mvnw help:evaluate -N -Dexpression=project.version | grep -v '\['
-   - export PROJECT_VERSION=$(./mvnw help:evaluate -N -Dexpression=project.version | grep -v '\[')
-
-deploy:
-  -
-    provider: releases
-    api_key:
-      secure: $GITHUB_API_KEY
-    file:
-      - launcher/target/thin-jar-launcher-$PROJECT_VERSION.jar
-      - maven-assembly-descriptors/target/thin-jar-maven-assembly-descriptors-$PROJECT_VERSION.jar
-      - maven-plugin/target/thin-jar-maven-plugin-$PROJECT_VERSION.jar
-    on:
-      repo: develrulez/thin-jar-launcher
-    name: $PROJECT_VERSION
+  - ./mvnw --settings .travis/settings.xml clean deploy -B -V -Prun-its,code-coverage,sonatype-oss-release
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
