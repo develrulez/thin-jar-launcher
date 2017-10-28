@@ -4,10 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.develrulez.thinjar.it</groupId>
-    <artifactId>spring-boot-app</artifactId>
+    <artifactId>linux-exec-script</artifactId>
     <version>1.0-SNAPSHOT</version>
-
-    <description>A simple IT verifying the basic use case.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -42,15 +40,8 @@
                             <goal>thin-linux-executable</goal>
                         </goals>
                         <configuration>
-                            <artifact>org.springframework.boot:spring-boot-loader-tools:${spring-boot.version}:jar</artifact>
-                            <script>org/springframework/boot/loader/tools/launch.script</script>
+                            <script>${project.build.directory}/test-projects/linux-exec-script/target/classes/launch-script.sh</script>
                         </configuration>
-                    </execution>
-                    <execution>
-                        <id>thin-windows-executable</id>
-                        <goals>
-                            <goal>thin-windows-executable</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

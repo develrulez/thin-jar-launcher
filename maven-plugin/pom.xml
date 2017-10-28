@@ -23,12 +23,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-loader-tools</artifactId>
-            <version>1.5.7.RELEASE</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
             <scope>provided</scope>
@@ -77,6 +71,11 @@
             <testResource>
                 <directory>src/test/resources</directory>
                 <filtering>true</filtering>
+            </testResource>
+            <testResource>
+                <directory>src/test-projects</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/test-projects</targetPath>
             </testResource>
         </testResources>
 

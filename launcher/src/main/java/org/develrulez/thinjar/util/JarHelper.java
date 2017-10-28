@@ -4,6 +4,7 @@ import org.develrulez.thinjar.maven.Dependency;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -12,6 +13,7 @@ import java.util.jar.Manifest;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 public class JarHelper {
 
@@ -139,5 +141,32 @@ public class JarHelper {
             throw new IllegalStateException(e);
         }
         return retval;
+    }
+
+    public void unzipFile(String resourcePath, Path target) throws IOException {
+        unzipFile(getJarPath(), resourcePath, target);
+    }
+
+    public static void unzipFile(Path jarPath, String resourcePath, Path target) throws IOException {
+        try(ZipInputStream zipIn = new ZipInputStream(new FileInputStream(jarPath.toFile()))) {
+            ZipEntry entry = zipIn.getNextEntry();
+            while (entry != null) {
+                boolean extracted = false;
+                if(!entry.isDirectory() && entry.getName().equals(resourcePath)){
+                    Files.copy(zipIn, target);
+                    extracted = true;
+                }
+                zipIn.closeEntry();
+                if(extracted){
+                    return;
+                }
+                entry = zipIn.getNextEntry();
+            }
+        }
+        throw new FileNotFoundException("File '" +
+                resourcePath +
+                "' not found in archive '" +
+                jarPath.toString() +
+                "'");
     }
 }

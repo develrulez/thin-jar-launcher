@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.develrulez.maven.plugin.it</groupId>
+        <groupId>org.develrulez.thinjar.it</groupId>
         <artifactId>multi-module-project</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
@@ -16,7 +16,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.develrulez.maven.plugin.it</groupId>
+            <groupId>org.develrulez.thinjar.it</groupId>
             <artifactId>multi-module-project-data-access</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

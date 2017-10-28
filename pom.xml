@@ -46,7 +46,6 @@
         <module>launcher</module>
         <module>maven-plugin</module>
         <module>maven-assembly-descriptors</module>
-        <module>test-dummy</module>
     </modules>
 
     <properties>

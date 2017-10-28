@@ -3,19 +3,38 @@ package org.develrulez.thinjar.util;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class JarHelperTest {
 
+    private static String buildDirectory;
+
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     private JarHelper sut;
+
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    @BeforeClass
+    public static void beforeClass(){
+        buildDirectory = System.getProperty("buildDirectory");
+    }
 
     @Before
     public void before() throws ClassNotFoundException {
@@ -25,7 +44,7 @@ public class JarHelperTest {
 
     @Test
     public void test() {
-        assertThat(sut.getJarName()).containsPattern(Pattern.compile("^thin-jar-test-dummy-.*\\.jar$"));
+        assertThat(sut.getJarName()).containsPattern(Pattern.compile("^dummy-.*\\.jar$"));
     }
 
     @Test
@@ -80,20 +99,20 @@ public class JarHelperTest {
     @Test
     public void testGetMavenPomUrl(){
         String mavenPomUrl = sut.getMavenPomUrl().toString();
-        assertThat(mavenPomUrl).endsWith("launcher/target/test-classes/thin-jar-test-dummy-0.0.1-SNAPSHOT.jar!/META-INF/maven/org.develrulez.thinjar/thin-jar-test-dummy/pom.xml").isNotNull();
+        assertThat(mavenPomUrl).endsWith("launcher/target/test-projects/dummy/target/dummy-x.y.z-SNAPSHOT.jar!/META-INF/maven/org.develrulez.thinjar.ut/dummy/pom.xml");
         assertThat(mavenPomUrl).startsWith("jar:file:");
     }
 
     @Test
     public void testGetJarPath(){
         String jarPath = sut.getJarPath().toString();
-        assertThat(jarPath).endsWith("target/test-classes/thin-jar-test-dummy-0.0.1-SNAPSHOT.jar");
+        assertThat(jarPath).endsWith("launcher/target/test-projects/dummy/target/dummy-x.y.z-SNAPSHOT.jar");
     }
 
     @Test
     public void testGetJarHome(){
         String jarHome = sut.getJarHome().toString();
-        assertThat(jarHome).endsWith("launcher/target/test-classes");
+        assertThat(jarHome).endsWith("launcher/target/test-projects/dummy/target");
     }
 
     @Test
@@ -101,5 +120,29 @@ public class JarHelperTest {
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("No resource found with name 'log4j.properties'");
         sut.getResourceUrl("log4j.properties");
+    }
+
+    @Test
+    public void testStaticUnzipFile() throws URISyntaxException, IOException {
+        Path jarPath = Paths.get(buildDirectory).resolve("test-projects/dummy/target/dummy-x.y.z-SNAPSHOT.jar");
+        assertThat(Files.exists(jarPath));
+        Path target = Paths.get(temporaryFolder.getRoot().toString()).resolve("pom.xml");
+        JarHelper.unzipFile(jarPath, "META-INF/maven/org.develrulez.thinjar.ut/dummy/pom.xml", target);
+        assertThat(Files.size(target)).isGreaterThan(0);
+    }
+
+    @Test
+    public void testUnzipFile() throws IOException {
+        Path target = Paths.get(temporaryFolder.getRoot().toString()).resolve("MANIFEST.MF");
+        JarHelper.unzipFile(sut.getJarPath(), "META-INF/MANIFEST.MF", target);
+        assertThat(Files.size(target)).isGreaterThan(0);
+    }
+
+    @Test
+    public void testUnzipWithNonExistentFile() throws IOException {
+        Path target = Paths.get(temporaryFolder.getRoot().toString()).resolve("MANIFEST.MF");
+        expectedException.expect(FileNotFoundException.class);
+        expectedException.expectMessage("File 'META-INF/MANIFESTSSS.MF' not found in archive '");
+        JarHelper.unzipFile(sut.getJarPath(), "META-INF/MANIFESTSSS.MF", target);
     }
 }
