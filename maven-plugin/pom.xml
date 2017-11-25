@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.develrulez.thinjar</groupId>
         <artifactId>thin-jar-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>thin-jar-maven-plugin</artifactId>
