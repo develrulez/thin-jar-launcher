@@ -15,7 +15,7 @@ install:
   - ./mvnw --settings .travis/settings.xml install -B -V
 
 script:
-  - ./mvnw --settings .travis/settings.xml clean deploy -B -V -P run-its,code-coverage,sonatype-oss-release
+  - ./.travis/deploy.sh
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
