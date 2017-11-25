@@ -27,7 +27,11 @@ public class Dependency {
     public Dependency(String groupId, String artifactId, String packaging, String version, String classifier, String scope) {
         this.groupId = groupId;
         this.artifactId = artifactId;
-        this.packaging = packaging;
+        if(packaging == null){
+            this.packaging = "jar";
+        }else {
+            this.packaging = packaging;
+        }
         this.version = version;
         this.classifier = classifier;
         this.scope = scope;

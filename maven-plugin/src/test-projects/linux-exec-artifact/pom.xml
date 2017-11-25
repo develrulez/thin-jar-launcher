@@ -42,7 +42,7 @@
                             <goal>thin-linux-executable</goal>
                         </goals>
                         <configuration>
-                            <artifact>org.springframework.boot:spring-boot-loader-tools:${spring-boot.version}:jar</artifact>
+                            <artifact>org.springframework.boot:spring-boot-loader-tools:${spring-boot.version}</artifact>
                         </configuration>
                     </execution>
                 </executions>

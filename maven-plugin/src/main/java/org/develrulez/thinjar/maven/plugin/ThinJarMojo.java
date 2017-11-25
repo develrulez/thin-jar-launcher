@@ -18,9 +18,6 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 @Mojo(name = "thin-jar", defaultPhase = LifecyclePhase.PACKAGE, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class ThinJarMojo extends MojoExecutableMojo {
 
-    @Parameter( defaultValue = "${plugin}", readonly = true )
-    private PluginDescriptor plugin;
-
     @Parameter( defaultValue = "${project.build.directory}", readonly = true )
     private File outputDirectory;
 
@@ -42,17 +39,14 @@ public class ThinJarMojo extends MojoExecutableMojo {
         }
 
         executeMojo(
-                plugin(
-                        artifactId("org.apache.maven.plugins"),
-                        groupId("maven-dependency-plugin"),
-                        version("3.0.2")),
+                getDependencyPlugin(),
                 goal("unpack"),
                 configuration(
                         element("artifactItems",
                                 element("artifactItem",
-                                        element("groupId", plugin.getGroupId()),
+                                        element("groupId", getPlugin().getGroupId()),
                                         element("artifactId", "thin-jar-launcher"),
-                                        element("version", plugin.getVersion()),
+                                        element("version", getPlugin().getVersion()),
                                         element("type", "jar"),
                                         element("overWrite", "true"),
                                         element("outputDirectory", "${project.build.directory}/thin-jar-launcher-extracted"),
@@ -62,12 +56,7 @@ public class ThinJarMojo extends MojoExecutableMojo {
                 getExecutionEnvironment());
 
         executeMojo(
-                plugin(
-                        artifactId("org.apache.maven.plugins"),
-                        groupId("maven-assembly-plugin"),
-                        version("3.1.0"),
-                        getAssemblyPluginDependencies()
-                ),
+                getAssemblyPlugin(),
                 goal("single"),
                 configuration(
                         element("descriptorRefs",
@@ -83,13 +72,5 @@ public class ThinJarMojo extends MojoExecutableMojo {
                         )
                 ),
                 getExecutionEnvironment());
-    }
-
-    private List<Dependency> getAssemblyPluginDependencies(){
-        Dependency dependency = new Dependency();
-        dependency.setGroupId(plugin.getGroupId());
-        dependency.setArtifactId("thin-jar-maven-assembly-descriptors");
-        dependency.setVersion(plugin.getVersion());
-        return Arrays.asList(dependency);
     }
 }

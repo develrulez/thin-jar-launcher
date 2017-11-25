@@ -17,24 +17,14 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
 @Mojo(name = "thin-windows-executable", defaultPhase = LifecyclePhase.PACKAGE, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class ThinWindowsExecutableMojo extends MojoExecutableMojo {
 
-    @Parameter( defaultValue = "${project.build.directory}", readonly = true )
-    private File outputDirectory;
-
-    @Parameter( defaultValue = "${project.build.finalName}", readonly = true )
-    private String finalName;
-
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        String finalNameThinJar = finalName + "-thin.jar";
-        String finalNameThinExe = finalName + "-thin.exe";
+        String finalNameThinJar = getFinalName() + "-thin.jar";
+        String finalNameThinExe = getFinalName() + "-thin.exe";
 
         executeMojo(
-                plugin(
-                        artifactId("com.akathist.maven.plugins.launch4j"),
-                        groupId("launch4j-maven-plugin"),
-                        version("1.7.21")
-                ),
+                getLaunch4jPlugin(),
                 goal("launch4j"),
                 configuration(
                         element("headerType", "console"),
@@ -58,6 +48,6 @@ public class ThinWindowsExecutableMojo extends MojoExecutableMojo {
                 ),
                 getExecutionEnvironment()
         );
-        attachArtifact("exe", "thin", Paths.get(outputDirectory.toURI()).resolve(finalNameThinExe).toFile());
+        attachArtifact("exe", "thin", Paths.get(getProjectBuildDirectory().toURI()).resolve(finalNameThinExe).toFile());
     }
 }

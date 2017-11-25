@@ -11,7 +11,9 @@ The Maven plugin aims to provide a lightweight solution, to build thin jars, whi
 
 **[The Central Repository](http://central.sonatype.org/) integration is in process.**
 
-When this is done, you can simply add the following plugin to your distributable jar artifact...
+### Thin Jar Goal
+
+To build a thin jar, based on the original jar artifact, simply add the following plugin to your distributable jar artifact...
 
 ```xml
 <plugin>
@@ -31,7 +33,7 @@ When this is done, you can simply add the following plugin to your distributable
 </plugin>
 ```
 
-... and you'll get an additional artifact to you default jar with the suffix **-thin.jar**.
+... and you'll get an additional artifact to your default jar with the suffix **-thin.jar**.
 
 This thin jar artifact can basically be executed the traditional way:
 
@@ -41,13 +43,58 @@ java -jar *-thin.jar
 
 Before the actual main class is executed, the launcher sets up a **lib** directory in the jars base directory, where the required application runtime dependencies are getting stored.
 
-To be continued...
+### Thin Linux Executable Goal
+
+Based on the Coderwall article ['How to make a JAR file Linux executable'](https://coderwall.com/p/ssuaxa/how-to-make-a-jar-file-linux-executable), this goal uses the ability to append a generic binary payload to a Linux shell script.
+
+```xml
+<!-- Ommited plugin configuration and mandatory previous thin jar goal execution -->
+<execution>
+  <id>thin-linux-executable</id>
+  <goals>
+    <goal>thin-linux-executable</goal>
+  </goals>
+  <configuration>
+    <!-- 
+        Optional: Maven artifact, which contains the launch script to use. 
+        A string of the form groupId:artifactId:version[:packaging[:classifier]] 
+        -->
+    <artifact>org.springframework.boot:spring-boot-loader-tools:${spring-boot.version}</artifact>
+    <!-- 
+        Optional: Relative or absolute launch script path.
+        -->
+    <script>org/springframework/boot/loader/tools/launch.script</script>
+  </configuration>
+</execution>
+```
+
+* Resulting artifact: target/*-thin.run
+* Configuration management: See [documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html#deployment-script-customization-when-it-runs)
+
+The above execution configuration example demonstrates the usage of a [launch script](https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html#deployment-install-supported-operating-systems) which is used by the spring-boot-maven-plugin, to produce executable jars. 
+
+### Thin Windows Executable Goal
+
+... via [launch4j](http://launch4j.sourceforge.net).
+
+```xml
+<!-- Ommited plugin configuration and mandatory previous thin jar goal execution -->
+<execution>
+  <id>thin-windows-executable</id>
+  <goals>
+    <goal>thin-windows-executable</goal>
+  </goals>
+</execution>
+```
+
+* Resulting artifact: target/*-thin.exe
+* Configuration management: See [documentation](http://launch4j.sourceforge.net/docs.html#Additional_jvm_options)
 
 ## Known 'inconsistencies'
 
 ### Spring Boot Developer Tools
 
-When the artifact [spring-boot-devtools](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html) is a part of your project dependencies, without any further configuration, following error may occur after launching the thin jar:
+When the artifact [spring-boot-devtools](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html) is a part of your project dependencies without any further configuration, following error may occur after launching the thin jar:
 
 ```text
 2017-10-20 18:35:09.438  INFO 4088 --- [  restartedMain] com.example.ExampleApplication           : Started ExampleApplication in 1.931 seconds (JVM running for 8.351)
@@ -92,7 +139,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ExampleApplication {
 
     public static void main(String[] args) {
-        if(Boolean.TRUE.toString().equals(System.getProperty("thinjar.launcher.active"))){
+        // Don't fear a NullPointerException, because this check is null-resistent.
+        if(Boolean.valueOf(System.getProperty("thinjar.launcher.active"))){
             System.setProperty("spring.devtools.restart.enabled", "false");
         }
         SpringApplication.run(ExampleApplication.class, args);

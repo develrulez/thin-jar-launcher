@@ -22,12 +22,6 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.attribute;
 @Mojo(name = "thin-linux-executable", defaultPhase = LifecyclePhase.PACKAGE, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class ThinLinuxExecutableMojo extends MojoExecutableMojo {
 
-    @Parameter( defaultValue = "${project.build.finalName}", readonly = true )
-    private String finalName;
-
-    @Parameter( defaultValue = "${project.build.directory}", readonly = true )
-    private File outputDirectory;
-
     @Parameter( property = "artifact")
     private String artifact;
 
@@ -40,8 +34,8 @@ public class ThinLinuxExecutableMojo extends MojoExecutableMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        String finalNameThinJar = finalName + "-thin.jar";
-        String finalNameThinRun = finalName + "-thin.run";
+        String finalNameThinJar = getFinalName() + "-thin.jar";
+        String finalNameThinRun = getFinalName() + "-thin.run";
 
         Path launchScriptPath = null;
         try {
@@ -51,11 +45,7 @@ public class ThinLinuxExecutableMojo extends MojoExecutableMojo {
         }
 
         executeMojo(
-                plugin(
-                        artifactId("org.apache.maven.plugins"),
-                        groupId("maven-antrun-plugin"),
-                        version("1.8")
-                ),
+                getAntrunPlugin(),
                 goal("run"),
                 configuration(
                         element("target",
@@ -74,22 +64,19 @@ public class ThinLinuxExecutableMojo extends MojoExecutableMojo {
                 ),
                 getExecutionEnvironment()
         );
-        attachArtifact("run", "thin", Paths.get(outputDirectory.toURI()).resolve(finalNameThinRun).toFile());
+        attachArtifact("run", "thin", Paths.get(getProjectBuildDirectory().toURI()).resolve(finalNameThinRun).toFile());
     }
 
     private Path getLaunchScriptPath() throws MojoExecutionException, IOException {
 
-        Path launchScriptPath = Paths.get(outputDirectory.toURI()).resolve("launch.sh");
+        Path launchScriptPath = Paths.get(getProjectBuildDirectory().toURI()).resolve("launch.sh");
 
         if(artifact != null){
             if(script == null){
                 throw new MojoExecutionException("When an artifact is defined a script path must be specified to search for.");
             }
             executeMojo(
-                    plugin(
-                            artifactId("org.apache.maven.plugins"),
-                            groupId("maven-dependency-plugin"),
-                            version("3.0.2")),
+                    getDependencyPlugin(),
                     goal("get"),
                     configuration(
                             element("artifact", artifact),

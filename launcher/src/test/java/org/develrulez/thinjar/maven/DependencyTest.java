@@ -11,7 +11,7 @@ public class DependencyTest {
         Dependency artifact = Dependency.from("com.example:spring-boot-thin-without-parent:0.0.1-SNAPSHOT");
         assertThat(artifact.getGroupId()).isEqualTo("com.example");
         assertThat(artifact.getArtifactId()).isEqualTo("spring-boot-thin-without-parent");
-        assertThat(artifact.getPackaging()).isNull();
+        assertThat(artifact.getPackaging()).isEqualTo("jar");
         assertThat(artifact.getClassifier()).isNull();
         assertThat(artifact.getVersion()).isEqualTo("0.0.1-SNAPSHOT");
         assertThat(artifact.getScope()).isNull();

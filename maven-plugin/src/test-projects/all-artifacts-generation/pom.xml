@@ -40,7 +40,7 @@
                             <goal>thin-linux-executable</goal>
                         </goals>
                         <configuration>
-                            <artifact>org.springframework.boot:spring-boot-loader-tools:${spring-boot.version}:jar</artifact>
+                            <artifact>org.springframework.boot:spring-boot-loader-tools:${spring-boot.version}</artifact>
                             <script>org/springframework/boot/loader/tools/launch.script</script>
                         </configuration>
                     </execution>
@@ -48,6 +48,12 @@
                         <id>thin-windows-executable</id>
                         <goals>
                             <goal>thin-windows-executable</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>thin-winsw</id>
+                        <goals>
+                            <goal>thin-winsw</goal>
                         </goals>
                     </execution>
                 </executions>

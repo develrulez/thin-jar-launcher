@@ -49,11 +49,19 @@ public class ThinArtifactsGenerationIT {
         assertTrue(jarFile.exists());
         File thinJarFile = new File(buildDirectory + "/test-projects/all-artifacts-generation/target/all-artifacts-generation-1.0-SNAPSHOT-thin.jar");
         assertTrue(thinJarFile.exists());
+        File thinRunFile = new File(buildDirectory + "/test-projects/all-artifacts-generation/target/all-artifacts-generation-1.0-SNAPSHOT-thin.run");
+        assertTrue(thinRunFile.exists());
+        File thinExeFile = new File(buildDirectory + "/test-projects/all-artifacts-generation/target/all-artifacts-generation-1.0-SNAPSHOT-thin.exe");
+        assertTrue(thinExeFile.exists());
+        assertTrue(thinJarFile.length() > 0);
+        assertTrue(thinJarFile.length() > jarFile.length());
+        assertTrue(thinRunFile.length() > thinJarFile.length());
+        assertTrue(thinExeFile.length() > thinRunFile.length());
     }
 
     @Test
     public void testMissingScript() throws Exception {
-        File basedir = new File(buildDirectory + "/test-projects/linux-exec-artifact-without-script");
+        File basedir = new File(buildDirectory + "/test-projects/linux-exec-artifact");
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("When an artifact is defined a script path must be specified to search for");
         maven.forProject(basedir)
