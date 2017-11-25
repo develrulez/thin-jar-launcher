@@ -115,6 +115,11 @@
                         <deployAtEnd>true</deployAtEnd>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>com.amashchenko.maven.plugin</groupId>
+                    <artifactId>gitflow-maven-plugin</artifactId>
+                    <version>1.8.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
