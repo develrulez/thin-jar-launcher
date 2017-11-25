@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.develrulez.thinjar</groupId>
         <artifactId>thin-jar-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>thin-jar-maven-assembly-descriptors</artifactId>
