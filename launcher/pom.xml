@@ -9,6 +9,10 @@
         <version>1.0.0</version>
     </parent>
     <artifactId>thin-jar-launcher</artifactId>
+
+    <name>Thin-JAR Launcher</name>
+    <description>Contributes the required components, to download the thin-jar dependencies while starting</description>
+
     <build>
         <plugins>
             <plugin>

@@ -11,6 +11,9 @@
     <artifactId>thin-jar-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
 
+    <name>Thin-JAR Maven Plugin</name>
+    <description>Maven plugin for building executable thin-jars</description>
+
     <dependencies>
 
         <dependency>

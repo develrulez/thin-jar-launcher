@@ -9,6 +9,10 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
+    <name>Thin-JAR Parent</name>
+    <description>Toolset for building executable thin-jars, which download their dependencies during application startup phase</description>
+    <url>https://github.com/develrulez/thin-jar-launcher</url>
+
     <licenses>
         <license>
             <name>MIT</name>

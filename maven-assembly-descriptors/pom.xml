@@ -12,4 +12,7 @@
 
     <artifactId>thin-jar-maven-assembly-descriptors</artifactId>
 
+    <name>Thin-JAR Maven Assembly Descriptors</name>
+    <description>Collection of different assembly descriptors for thin-jar packaging variants</description>
+
 </project>
